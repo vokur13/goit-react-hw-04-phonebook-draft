@@ -12,13 +12,41 @@ export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleNameChange = e => {
-    setName(e.target.value);
+  //   const handleNameChange = e => {
+  //     setName(e.target.value);
+  //   };
+
+  //   const handleNumberChange = e => {
+  //     setNumber(e.target.value);
+  //   };
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  const handleNumberChange = e => {
-    setNumber(e.target.value);
+  const handleSubmit = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    this.props.onSubmit({ name, value });
+    //     resetForm();
   };
+
+  //   const resetForm = () => {
+  //     const { name, value } = e.target;
+  //     this.setState({ name: '', number: '' });
+  //   };
 
   return (
     <Box
@@ -30,7 +58,7 @@ export const ContactForm = () => {
       borderRadius="normal"
       boxShadow="basic"
     >
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Label htmlFor={nameId}>Name</Label>
         <Input
           type="text"
@@ -40,7 +68,7 @@ export const ContactForm = () => {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           value={name}
-          onChange={handleNameChange}
+          onChange={handleChange}
         />
         <Label htmlFor={numberID}>Number</Label>
         <Input
@@ -51,11 +79,11 @@ export const ContactForm = () => {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           value={number}
-          onChange={handleNumberChange}
+          onChange={handleChange}
         />
-        {/* <Button type="submit" disabled={!this.state.name}>
+        <Button type="submit" disabled={!name}>
           Add contact
-        </Button> */}
+        </Button>
       </Form>
     </Box>
   );
