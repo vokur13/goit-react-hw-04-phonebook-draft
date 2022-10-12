@@ -16,11 +16,6 @@ export class ContactForm extends Component {
     this.setState({ [name]: value });
   };
 
-  //   checkChange = e => {
-  //     const { name } = e.target;
-  //     return !this.state[name] ? false : true;
-  //   };
-
   handleSubmit = e => {
     e.preventDefault();
     this.props.onSubmit(this.state);
