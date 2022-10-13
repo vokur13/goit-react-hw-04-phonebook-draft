@@ -1,24 +1,16 @@
-import { useState } from 'react';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Box } from '../Box';
 import { Form, Label, Input } from './ContactForm.styled';
 import { Button } from '../Button';
 
-export const ContactForm = ({ onSubmit }) => {
+export const ContactForm = () => {
   const nameId = nanoid();
   const numberID = nanoid();
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-
-  //   const handleNameChange = e => {
-  //     setName(e.target.value);
-  //   };
-
-  //   const handleNumberChange = e => {
-  //     setNumber(e.target.value);
-  //   };
+  const [name, setName] = useLocalStorage('name', '');
+  const [number, setNumber] = useLocalStorage('number', '');
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -36,12 +28,12 @@ export const ContactForm = ({ onSubmit }) => {
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    onSubmit({ name, value });
-    //     resetForm();
-  };
+  //   const handleSubmit = e => {
+  //     e.preventDefault();
+  //     const { name, value } = e.target;
+  //     onSubmit({ name, value });
+  //         resetForm();
+  //   };
 
   //   const resetForm = () => {
   //     const { name, value } = e.target;
@@ -58,7 +50,7 @@ export const ContactForm = ({ onSubmit }) => {
       borderRadius="normal"
       boxShadow="basic"
     >
-      <Form onSubmit={handleSubmit}>
+      <Form>
         <Label htmlFor={nameId}>Name</Label>
         <Input
           type="text"
@@ -155,5 +147,5 @@ export const ContactForm = ({ onSubmit }) => {
 // }
 
 ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  //   onSubmit: PropTypes.func.isRequired,
 };
