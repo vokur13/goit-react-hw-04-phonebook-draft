@@ -5,7 +5,7 @@ import { Box } from '../Box';
 import { Form, Label, Input } from './ContactForm.styled';
 import { Button } from '../Button';
 
-export const ContactForm = () => {
+export const ContactForm = ({ onSubmit }) => {
   const nameId = nanoid();
   const numberID = nanoid();
 
@@ -39,7 +39,7 @@ export const ContactForm = () => {
   const handleSubmit = e => {
     e.preventDefault();
     const { name, value } = e.target;
-    this.props.onSubmit({ name, value });
+    onSubmit({ name, value });
     //     resetForm();
   };
 
