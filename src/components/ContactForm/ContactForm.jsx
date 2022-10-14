@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 // import { useLocalStorage } from 'hooks/useLocalStorage';
 import PropTypes from 'prop-types';
@@ -6,20 +7,34 @@ import { Box } from '../Box';
 import { Form, Label, Input } from './ContactForm.styled';
 import { Button } from '../Button';
 
-export const ContactForm = () => {
+export const ContactForm = ({ onFormSubmit }) => {
   const nameId = nanoid();
   const numberID = nanoid();
+
+  //   const [isActive, setIsActive] = useState(false);
 
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = data => console.log('data', data);
+    reset,
+    //     watch,
+    formState,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm({ defaultValues: { name: '', number: '' } });
 
-  console.log(watch('name'));
-  console.log(watch('number'));
+  const onSubmit = data => {
+    //     console.log(data);
+    onFormSubmit(data);
+  };
+
+  //   console.log(watch('name'));
+  //   console.log(watch('number'));
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ name: '', number: '' });
+    }
+  }, [formState, reset]);
 
   //   console.log('Object.values(watch)', Object.values(watch()));
 
@@ -50,20 +65,24 @@ export const ContactForm = () => {
             pattern:
               /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/i,
           })}
+          aria-invalid={errors.name ? 'true' : 'false'}
         />
-        {errors.nameRequired && <span>This field is required</span>}
+        {errors.name?.type === 'required' && (
+          <p role="alert">Name is required</p>
+        )}
         <Label htmlFor={numberID}>Number</Label>
         <Input
           id={numberID}
           type="tel"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           {...register('number', {
-            required: true,
+            required: 'Phone number is required',
             pattern:
               /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/i,
           })}
+          aria-invalid={errors.number ? 'true' : 'false'}
         />
-        {errors.numberRequired && <span>This field is required</span>}
+        {errors.number && <p role="alert">{errors.number?.message}</p>}
         {/* <input type="submit" /> */}
         <Button type="submit">Add contact</Button>
       </Form>
@@ -72,33 +91,6 @@ export const ContactForm = () => {
 };
 
 // disabled={!data}
-
-export const ReactHookForm = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = data => console.log(data);
-
-  console.log(watch('example'));
-
-  return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {/* register your input into the hook by invoking the "register" function */}
-      <input defaultValue="Query" {...register('example')} />
-
-      {/* include validation with required or other standard HTML validation rules */}
-      <input {...register('exampleRequired', { required: true })} />
-      {/* errors will return when field validation fails  */}
-      {errors.exampleRequired && <span>This field is required</span>}
-
-      <input type="submit" />
-    </form>
-  );
-};
 
 // export const ContactFormHook = () => {
 //   const nameId = nanoid();

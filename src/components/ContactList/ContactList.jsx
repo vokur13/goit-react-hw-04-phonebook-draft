@@ -4,7 +4,7 @@ import { Box } from '../Box';
 import { List, Item, Name, Number } from './ContactList.styled';
 import { Button } from '../Button';
 
-export const ContactList = ({ list, onDelete }) => {
+export const ContactList = ({ list }) => {
   return (
     <Box
       display="block"
@@ -19,14 +19,14 @@ export const ContactList = ({ list, onDelete }) => {
           <Item key={item.id}>
             <Name>{item.name + ':'}</Name>
             <Number>{item.number}</Number>
-            <Button
+            {/* <Button
               type="button"
               onClick={() => {
                 onDelete(item.id);
               }}
             >
               Delete
-            </Button>
+            </Button> */}
           </Item>
         ))}
       </List>
@@ -44,3 +44,7 @@ ContactList.propTypes = {
   ),
   onDelete: PropTypes.func.isRequired,
 };
+
+// {
+//   list, onDelete;
+// }
