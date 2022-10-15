@@ -1,56 +1,38 @@
-// import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Box } from '../components/Box';
 import { ContactForm } from '../components/ContactForm';
 import { Filter } from '../components/Filter';
 import { ContactList } from '../components/ContactList';
 import { nanoid } from 'nanoid';
-import { save, load } from '../utils/storage';
+import { useLocalStorage } from 'hooks/useLocalStorage';
+import { initailContacts } from 'utils/contacts';
 
 const STORAGE_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () =>
-      JSON.parse(window.localStorage.getItem(STORAGE_KEY)) ?? [
-        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-      ]
-  );
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
-  }, [contacts]);
+  const [contacts, setContacts] = useLocalStorage(STORAGE_KEY, initailContacts);
 
   function formSubmitHandler({ name, number }) {
     const checkName = contacts.some(item =>
-      item.name.toLowerCase().includes(name.toLowerCase())
+      item.name.toLowerCase().trim().includes(name.toLowerCase().trim())
     );
     checkName
       ? alert(`${name} is already in contacts`)
       : setContacts([{ id: nanoid(), name, number }, ...contacts]);
   }
 
-  function changeFilter([value]) {
-    if (value) {
-      setFilter(value);
-    }
-  }
-
-  useEffect(() => {
-    if (filter) {
-      const normilizedFilter = filter.toLowerCase();
-      setContacts(
-        contacts.filter(item =>
-          item.name.toLowerCase().includes(normilizedFilter)
-        )
-      );
+  const useChangeFilter = ([value]) => {
+    useEffect(() => {
+      if (value) {
+        setContacts(
+          contacts.filter(item =>
+            item.name.toLowerCase().trim().includes(value.toLowerCase().trim())
+          )
+        );
+      }
       return () => {};
-    }
-  }, [contacts, filter]);
+    }, [value]);
+  };
 
   function deleteItem(itemID) {
     setContacts(contacts.filter(item => item.id !== itemID));
@@ -62,7 +44,7 @@ export const App = () => {
       <ContactForm onFormSubmit={formSubmitHandler} />
 
       <h2>Contacts</h2>
-      <Filter onChange={changeFilter} />
+      <Filter onChange={useChangeFilter} />
       <ContactList onDelete={deleteItem} list={contacts} />
     </Box>
   );
@@ -146,3 +128,20 @@ export const App = () => {
 //     );
 //   }
 // }
+
+// =====================================
+
+//   const [contacts, setContacts] = useState(
+//     () =>
+//       JSON.parse(window.localStorage.getItem(STORAGE_KEY)) ?? [
+//         { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+//         { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+//         { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+//         { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+//       ]
+//   );
+//   const [filter, setFilter] = useState('');
+
+//   useEffect(() => {
+//     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+//   }, [contacts]);
