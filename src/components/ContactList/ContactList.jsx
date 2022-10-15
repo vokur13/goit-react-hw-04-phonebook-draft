@@ -19,14 +19,14 @@ export const ContactList = ({ list }) => {
           <Item key={item.id}>
             <Name>{item.name + ':'}</Name>
             <Number>{item.number}</Number>
-            {/* <Button
+            <Button
               type="button"
-              onClick={() => {
-                onDelete(item.id);
-              }}
+              //       onClick={() => {
+              //         onDelete(item.id);
+              //       }}
             >
               Delete
-            </Button> */}
+            </Button>
           </Item>
         ))}
       </List>
@@ -35,14 +35,14 @@ export const ContactList = ({ list }) => {
 };
 
 ContactList.propTypes = {
-  list: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onDelete: PropTypes.func.isRequired,
+  //   list: PropTypes.arrayOf(
+  //     PropTypes.exact({
+  //       id: PropTypes.string.isRequired,
+  //       name: PropTypes.string.isRequired,
+  //       number: PropTypes.string.isRequired,
+  //     })
+  //   ),
+  //   onDelete: PropTypes.func.isRequired,
 };
 
 // {

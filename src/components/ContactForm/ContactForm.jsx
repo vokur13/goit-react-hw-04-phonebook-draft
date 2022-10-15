@@ -34,15 +34,7 @@ export const ContactForm = ({ onFormSubmit }) => {
     if (formState.isSubmitSuccessful) {
       reset({ name: '', number: '' });
     }
-  }, [formState, reset]);
-
-  //   console.log('Object.values(watch)', Object.values(watch()));
-
-  //   const checkForData = () => {
-  //     return Object.values(watch()).every(item => item > 0);
-  //   };
-
-  //   console.log('checkForData()', checkForData());
+  }, [formState, isSubmitSuccessful, reset]);
 
   return (
     <Box

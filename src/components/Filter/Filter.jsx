@@ -9,13 +9,13 @@ export const Filter = ({ onChange }) => {
   const filterID = nanoid();
   const {
     register,
-    handleSubmit,
     watch,
-    reset,
-    formState: { errors },
+    //     handleSubmit,
+    //     reset,
+    //     formState: { errors },
   } = useForm();
-  //   const onSubmit = data => console.log(data);
 
+  //   const onSubmit = data => console.log(data);
   //   console.log(watch('example'));
 
   onChange(watch());
@@ -31,14 +31,7 @@ export const Filter = ({ onChange }) => {
       boxShadow="basic"
     >
       <Label htmlFor={filterID}>Find contacts by name</Label>
-      <Input
-        id={filterID}
-        type="text"
-        defaultValue=""
-        {...register('example')}
-        // value={value}
-        // onChange={onChange}
-      />
+      <Input id={filterID} type="text" defaultValue="" {...register('value')} />
     </Box>
   );
 };
@@ -63,6 +56,5 @@ export const protoFilter = ({ value, onChange }) => {
 };
 
 Filter.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };

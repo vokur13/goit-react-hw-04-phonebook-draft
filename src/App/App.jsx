@@ -10,9 +10,16 @@ import { save, load } from '../utils/storage';
 const STORAGE_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState([
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
   const [filter, setFilter] = useState('');
   const [contact, setContact] = useState([{ id: '', name: '', number: '' }]);
+
+  console.log('useState contact', contact);
 
   //   useEffect(() => {
   //     if (load(STORAGE_KEY)) {
@@ -28,12 +35,16 @@ export const App = () => {
     setContact({ id: nanoid(), name, number });
   };
 
-  const onChange = value => {
-    console.log('value', value);
+  useEffect(() => {
+    console.log('useEffect contact', contact);
+  }, [contact]);
+
+  const onFilterChange = ({ value }) => {
+    setFilter(value);
   };
 
   useEffect(() => {
-    //     if (contacts.length > 0) {
+    //     if (contacts.length > 0 ?? contact) {
     //       const checkName = contacts.some(item =>
     //         item.name.toLowerCase().includes(contact.name.toLowerCase())
     //       );
@@ -45,28 +56,39 @@ export const App = () => {
     //     setContacts([contact]);
   }, [contacts, contact]);
 
+  useEffect(() => {
+    //     if (filter) {
+    //       const normilizedFilter = filter.toLowerCase();
+    //       setContacts(
+    //         contacts.filter(item =>
+    //           item.name.toLowerCase().includes(normilizedFilter)
+    //         )
+    //       );
+    //     }
+  }, [contacts, filter]);
+
   return (
     <Box width={1} p={4} bg="bgBasic" as="main">
       <h1>Phonebook</h1>
       <ContactForm onFormSubmit={formSubmitHandler} />
 
       <h2>Contacts</h2>
-      <Filter onChange={onChange} />
+      {/* <Filter onChange={onFilterChange} /> */}
       {/* <Filter value= {filter} onChange={this.changeFilter} /> */}
       {/* <ContactList onDelete={this.deleteItem} list={filteredItem} /> */}
-      {/* <ContactList list={filteredItem} /> */}
+      <ContactList list={contacts} />
     </Box>
   );
 };
 
 // export class protoApp extends Component {
 //   state = {
-//     //     contacts: [
-//     //             { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-//     //             { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-//     //             { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-//     //             { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-//     //     ],
+// contacts: [
+//         { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+//         { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+//         { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+//         { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+// ],
 //     contacts: [],
 //     filter: '',
 //   };
