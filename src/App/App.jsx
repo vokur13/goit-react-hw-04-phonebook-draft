@@ -17,55 +17,45 @@ export const App = () => {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ]);
   const [filter, setFilter] = useState('');
-  const [contact, setContact] = useState([{ id: '', name: '', number: '' }]);
-
-  console.log('useState contact', contact);
 
   //   useEffect(() => {
   //     if (load(STORAGE_KEY)) {
   //       setContacts(load(STORAGE_KEY));
   //     }
-  //   }, []);
+  //     setContacts(save(STORAGE_KEY, contacts));
+  //   }, [contacts]);
 
   //   useEffect(() => {
   //     setContacts(save(STORAGE_KEY, contacts));
   //   }, [contacts]);
 
-  const formSubmitHandler = ({ name, number }) => {
-    setContact({ id: nanoid(), name, number });
-  };
+  function formSubmitHandler({ name, number }) {
+    const checkName = contacts.some(item =>
+      item.name.toLowerCase().includes(name.toLowerCase())
+    );
+    checkName
+      ? alert(`${name} is already in contacts`)
+      : setContacts([{ id: nanoid(), name, number }, ...contacts]);
+  }
+
+  //   useEffect(() => {
+  //     console.log(contacts);
+  //   }, [contacts]);
+
+  function changeFilter([value]) {
+    console.log('Filter Value:', value);
+    return value;
+  }
 
   useEffect(() => {
-    console.log('useEffect contact', contact);
-  }, [contact]);
-
-  const onFilterChange = ({ value }) => {
-    setFilter(value);
-  };
-
-  useEffect(() => {
-    //     if (contacts.length > 0 ?? contact) {
-    //       const checkName = contacts.some(item =>
-    //         item.name.toLowerCase().includes(contact.name.toLowerCase())
-    //       );
-    //       checkName
-    //         ? alert(`${contact.name} is already in contacts`)
-    //         : setContacts([contact, ...contacts]);
-    //       console.log(contacts);
-    //     }
-    //     setContacts([contact]);
-  }, [contacts, contact]);
-
-  useEffect(() => {
-    //     if (filter) {
+    //     const getFilteredItems = () => {
+    //       const { contacts, filter } = this.state;
     //       const normilizedFilter = filter.toLowerCase();
-    //       setContacts(
-    //         contacts.filter(item =>
-    //           item.name.toLowerCase().includes(normilizedFilter)
-    //         )
+    //       return contacts.filter(item =>
+    //         item.name.toLowerCase().includes(normilizedFilter)
     //       );
-    //     }
-  }, [contacts, filter]);
+    //     };
+  }, [filter]);
 
   return (
     <Box width={1} p={4} bg="bgBasic" as="main">
@@ -73,7 +63,7 @@ export const App = () => {
       <ContactForm onFormSubmit={formSubmitHandler} />
 
       <h2>Contacts</h2>
-      {/* <Filter onChange={onFilterChange} /> */}
+      <Filter onChange={changeFilter} />
       {/* <Filter value= {filter} onChange={this.changeFilter} /> */}
       {/* <ContactList onDelete={this.deleteItem} list={filteredItem} /> */}
       <ContactList list={contacts} />
