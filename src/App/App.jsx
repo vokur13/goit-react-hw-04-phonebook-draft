@@ -38,24 +38,27 @@ export const App = () => {
       : setContacts([{ id: nanoid(), name, number }, ...contacts]);
   }
 
-  //   useEffect(() => {
-  //     console.log(contacts);
-  //   }, [contacts]);
-
   function changeFilter([value]) {
-    console.log('Filter Value:', value);
-    return value;
+    if (value) {
+      setFilter(value);
+    }
   }
 
   useEffect(() => {
-    //     const getFilteredItems = () => {
-    //       const { contacts, filter } = this.state;
-    //       const normilizedFilter = filter.toLowerCase();
-    //       return contacts.filter(item =>
-    //         item.name.toLowerCase().includes(normilizedFilter)
-    //       );
-    //     };
-  }, [filter]);
+    if (filter) {
+      const normilizedFilter = filter.toLowerCase();
+      setContacts(
+        contacts.filter(item =>
+          item.name.toLowerCase().includes(normilizedFilter)
+        )
+      );
+      return () => {};
+    }
+  }, [contacts, filter]);
+
+  function deleteItem(itemID) {
+    setContacts(contacts.filter(item => item.id !== itemID));
+  }
 
   return (
     <Box width={1} p={4} bg="bgBasic" as="main">
@@ -64,9 +67,7 @@ export const App = () => {
 
       <h2>Contacts</h2>
       <Filter onChange={changeFilter} />
-      {/* <Filter value= {filter} onChange={this.changeFilter} /> */}
-      {/* <ContactList onDelete={this.deleteItem} list={filteredItem} /> */}
-      <ContactList list={contacts} />
+      <ContactList onDelete={deleteItem} list={contacts} />
     </Box>
   );
 };
