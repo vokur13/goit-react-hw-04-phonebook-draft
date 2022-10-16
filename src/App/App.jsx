@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Box } from '../components/Box';
 import { ContactForm } from '../components/ContactForm';
 import { Filter } from '../components/Filter';
@@ -11,6 +11,7 @@ const STORAGE_KEY = 'contacts';
 
 export const App = () => {
   const [contacts, setContacts] = useLocalStorage(STORAGE_KEY, initailContacts);
+  const [query, setQuery] = useState('');
 
   function formSubmitHandler({ name, number }) {
     const checkName = contacts.some(item =>
@@ -21,18 +22,30 @@ export const App = () => {
       : setContacts([{ id: nanoid(), name, number }, ...contacts]);
   }
 
-  const useChangeFilter = ([value]) => {
-    useEffect(() => {
-      if (value) {
-        setContacts(
-          contacts.filter(item =>
-            item.name.toLowerCase().trim().includes(value.toLowerCase().trim())
-          )
-        );
-      }
-      return () => {};
-    }, [value]);
-  };
+  function onFilterChange([value]) {
+    if (value) {
+      setQuery(value.toLowerCase().trim());
+    }
+  }
+
+  const filteredContacts = useMemo(
+    () =>
+      contacts.filter(item => item.name.toLowerCase().trim().includes(query)),
+    [contacts, query]
+  );
+
+  //   const useChangeFilter = ([value]) => {
+  //     useEffect(() => {
+  //       if (value) {
+  //         setContacts(
+  //           contacts.filter(item =>
+  //             item.name.toLowerCase().trim().includes(value.toLowerCase().trim())
+  //           )
+  //         );
+  //       }
+  //       return () => {};
+  //     }, [value]);
+  //   };
 
   function deleteItem(itemID) {
     setContacts(contacts.filter(item => item.id !== itemID));
@@ -44,8 +57,13 @@ export const App = () => {
       <ContactForm onFormSubmit={formSubmitHandler} />
 
       <h2>Contacts</h2>
-      <Filter onChange={useChangeFilter} />
-      <ContactList onDelete={deleteItem} list={contacts} />
+      <Filter onChange={onFilterChange} />
+      <ContactList onDelete={deleteItem} list={filteredContacts} />
+      {/* <div>
+        {filteredContacts.map(item => (
+          <div key={item.id}>{item.name}</div>
+        ))}
+      </div> */}
     </Box>
   );
 };
