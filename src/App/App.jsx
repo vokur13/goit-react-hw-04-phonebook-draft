@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { Box } from '../components/Box';
 import { ContactForm } from '../components/ContactForm';
 import { Filter } from '../components/Filter';
@@ -23,14 +23,17 @@ export const App = () => {
   }
 
   function onFilterChange([value]) {
-    if (value) {
-      setFilter(value);
+    if (!value) {
+      return;
     }
+    setFilter(value);
   }
 
-  const filteredContacts = contacts.filter(item =>
-    item.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
-  );
+  const filteredContacts = useMemo(() => {
+    return contacts.filter(item =>
+      item.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
+    );
+  }, [contacts, filter]);
 
   function deleteItem(itemID) {
     setContacts(contacts.filter(item => item.id !== itemID));
