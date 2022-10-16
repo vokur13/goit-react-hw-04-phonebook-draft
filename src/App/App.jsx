@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useList } from 'react-use';
 import { Box } from '../components/Box';
 import { ContactForm } from '../components/ContactForm';
@@ -14,6 +14,7 @@ const STORAGE_KEY = 'contacts';
 export const App = () => {
   const [contacts, setContacts] = useLocalStorage(STORAGE_KEY, initailContacts);
   const [query, setQuery] = useState('');
+  const isFirstRender = useRef(true);
   //   const [list, { filter }] = useList(() => contacts);
 
   function formSubmitHandler({ name, number }) {
@@ -34,16 +35,15 @@ export const App = () => {
   }
 
   useEffect(() => {
-    if (!query) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
       setContacts(contacts);
-    } else {
-      let newContacts = [...contacts].filter(item => item.name.includes(query));
-      console.log('newContacts', newContacts);
-      setContacts(newContacts);
+      return;
     }
-
+    let newContacts = [...contacts].filter(item => item.name.includes(query));
+    setContacts(newContacts);
     return () => {
-      setContacts(contacts);
+      isFirstRender.current = true;
     };
   }, [contacts, query, setContacts]);
 
