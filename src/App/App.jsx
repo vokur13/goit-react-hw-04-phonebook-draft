@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useList } from 'react-use';
 import { Box } from '../components/Box';
 import { ContactForm } from '../components/ContactForm';
 import { Filter } from '../components/Filter';
@@ -7,15 +6,12 @@ import { ContactList } from '../components/ContactList';
 import { nanoid } from 'nanoid';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 import { initailContacts } from 'utils/contacts';
-// import { Demo } from 'components/FilterDemo';
 
 const STORAGE_KEY = 'contacts';
 
 export const App = () => {
   const [contacts, setContacts] = useLocalStorage(STORAGE_KEY, initailContacts);
-  const [query, setQuery] = useState('');
-  const isFirstRender = useRef(true);
-  //   const [list, { filter }] = useList(() => contacts);
+  const [filter, setFilter] = useState('');
 
   function formSubmitHandler({ name, number }) {
     const checkName = contacts.some(item =>
@@ -28,56 +24,13 @@ export const App = () => {
 
   function onFilterChange([value]) {
     if (value) {
-      setQuery(value);
+      setFilter(value);
     }
   }
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      setContacts(contacts);
-      return;
-    }
-    let newContacts = [...contacts].filter(item => item.name.includes(query));
-    setContacts(newContacts);
-    return () => {
-      isFirstRender.current = true;
-    };
-  }, [contacts, query, setContacts]);
-
-  //   function getFilteredItem(query) {
-  //     if (!query) {
-  //       setContacts(contacts);
-  //     } else {
-  //       let newContacts = [...contacts].filter(item =>
-  //         item.name.toLowerCase().trim().includes(query)
-  //       );
-  //       setContacts(newContacts);
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     filter(item => item.name.toLowerCase().trim().includes(query));
-  //   }, [contacts, filter, query]);
-
-  //   const filteredContacts = useMemo(
-  //     () =>
-  //       contacts.filter(item => item.name.toLowerCase().trim().includes(query)),
-  //     [contacts, query]
-  //   );
-
-  //   const useChangeFilter = ([value]) => {
-  //     useEffect(() => {
-  //       if (value) {
-  //         setContacts(
-  //           contacts.filter(item =>
-  //             item.name.toLowerCase().trim().includes(value.toLowerCase().trim())
-  //           )
-  //         );
-  //       }
-  //       return () => {};
-  //     }, [value]);
-  //   };
+  const filteredContacts = contacts.filter(item =>
+    item.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
+  );
 
   function deleteItem(itemID) {
     setContacts(contacts.filter(item => item.id !== itemID));
@@ -90,21 +43,7 @@ export const App = () => {
 
       <h2>Contacts</h2>
       <Filter onChange={onFilterChange} />
-      <ContactList onDelete={deleteItem} list={contacts} />
-      {/* <button
-        onClick={() =>
-          filter(item => item.name.toLowerCase().trim().includes(query))
-        }
-      >
-        Filter even values
-      </button> */}
-
-      {/* <pre>{JSON.stringify(list, null, 2)}</pre> */}
-      {/* <div>
-        {filteredContacts.map(item => (
-          <div key={item.id}>{item.name}</div>
-        ))}
-      </div> */}
+      <ContactList onDelete={deleteItem} list={filteredContacts} />
     </Box>
   );
 };
