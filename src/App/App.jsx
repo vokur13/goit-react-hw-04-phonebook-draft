@@ -27,9 +27,7 @@ export const App = () => {
   }
 
   function onFilterChange([value]) {
-    if (!value) {
-      setQuery('');
-    } else {
+    if (value) {
       setQuery(value);
     }
   }
