@@ -1,11 +1,11 @@
-import { useState, useMemo } from 'react';
-import { Box } from '../components/Box';
-import { ContactForm } from '../components/ContactForm';
-import { Filter } from '../components/Filter';
-import { ContactList } from '../components/ContactList';
+import { useState, useMemo, useRef } from 'react';
+import { Box } from 'components/Box';
+import { ContactForm } from 'components/ContactForm';
+import { Filter } from 'components/Filter';
+import { ContactList } from 'components/ContactList';
 import { nanoid } from 'nanoid';
 import { useLocalStorage } from 'hooks/useLocalStorage';
-import { initailContacts } from 'utils/contacts';
+import { initailContacts } from 'utils/initialContacts';
 
 const STORAGE_KEY = 'contacts';
 
@@ -23,16 +23,17 @@ export const App = () => {
   }
 
   function onFilterChange([value]) {
-    if (!value) {
-      return;
-    }
-    setFilter(value);
+    !value ? setFilter('') : setFilter(value);
   }
 
   const filteredContacts = useMemo(() => {
-    return contacts.filter(item =>
-      item.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
-    );
+    return contacts.filter(item => {
+      console.log('item', item);
+      return item.name
+        .toLowerCase()
+        .trim()
+        .includes(filter.toLowerCase().trim());
+    });
   }, [contacts, filter]);
 
   function deleteItem(itemID) {
